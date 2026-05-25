@@ -1,0 +1,49 @@
+PYSPARK CODE EXPLANATION::-
+Import Dependencies 
+from pyspark.sql import sparksession/context
+from pyspark.sql.functions import *
+import pyspark
+Driver ==> Spark = SparkSession.builder \
+                    .appname("jana") \
+                    .master(local[*]) \
+                    .getOrcreate \
+                  
+To Create Data Frame (1)==> df = spark.read.format("csv").option("header","true").load("jana.csv")
+To create Data Frame (2)==> df = spark.read.csv("jana.csv", header=true)
+df.show()
+To scan particular DataType we have to give structtype
+Myschema = Structtype([
+    StructField('id', IntegerType()),
+    StructField('name', StringType()),
+    StructField('salary', FloatType()),
+    ])
+    df = spark.read.csv("jana.csv", header=true, schema=myschema)
+    df.dtypes-----> To Show datatypes.
+    df.show()
+    df.first()----> Will show 1st row in the table.
+    df.distinct().show()-----> will show unique rows and it wont show duplicate and null values.
+    df2 = df.na.drop()
+    df2.show()
+    df2 = df.filter(df.name.isNotnull())
+    df2.show()
+    
+    df2 = df.withcoloumn('jana_city', when(df.city.isNull(), 'unknown').otherwise(df.city))
+  df2 = df.filter((df.janacity.like("%dh%")))
+  df2.show()
+id          firstname            lastname
+1           madhuri              kumari   
+2           sandhya              kumari
+3           jana                jana
+df2 = df.select(df.janacity, df.janacity.substr(1,5).alias(city))
+df.RegisterTempTable('jana')
+query = spark.sql('select * from jana')
+query.show()
+query = spark.sql('select concat(firstname, " ", lastname)as fullname from jana where gender == "female")
+
+df2 = df.withColumn('countrymexico', when(df.country == 'mexico', 'yes').otherwise('No'))
+import pysparl.sql.functions as sqlfunc
+df2 = df.groupby("countrymexico").agg(sqlfunc.sum("bytes_used"))
+df2 = df.groupby("country").agg(sqlfunc.countDistinct("ip address"))
+df2.sort(col("ipaddress").desc()).show()
+df2.write.csv
+df2.write.parquet
