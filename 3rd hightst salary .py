@@ -9,7 +9,8 @@ FROM
 ORDER BY 
     salary DESC
 LIMIT 3;
-Use code with caution.Method B: Window Function (Best Practice: Handles matching/tied salaries)If two employees tie for the 3rd highest salary, this method handles it gracefully without dropping records.sqlWITH RankedEmployees AS (
+#Use code with caution.
+#Method B: Window Function (Best Practice: Handles matching/tied salaries)If two employees tie for the 3rd highest salary, this method handles it gracefully without dropping records.sqlWITH RankedEmployees AS (
     SELECT 
         employee_id, 
         employee_name, 
