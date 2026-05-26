@@ -1,5 +1,5 @@
 # Get the Top 3 Highest-Paid Employees (Google)
-1. SQL ImplementationMethod A: Standard Filtering (Best if there are no salary ties)sqlSELECT 
+1. SQL Implementation Method A: Standard Filtering (Best if there are no salary ties)sqlSELECT 
     employee_id, 
     employee_name, 
     department, 
