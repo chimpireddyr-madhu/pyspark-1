@@ -1,0 +1,56 @@
+#Show the Count of Orders Per Customer (Meta)
+Show the Count of Orders Per Customer (Meta)To calculate the total count of orders placed by each customer, you need to group the transaction records by the customer's unique identifier and apply an aggregation count. This metric helps track user engagement and purchase frequency across platforms like Meta Meta Business Suite or Marketplace.Below is the production-ready code implemented in both SQL and PySpark.1. SQL ImplementationIn SQL, this is achieved using the COUNT() aggregate function alongside a GROUP BY clause. Ordering by the order count descending ensures your most active customers are surfaced at the top.sqlSELECT 
+    customer_id,
+    customer_name,
+    COUNT(order_id) AS total_orders_placed
+FROM 
+    meta_orders
+WHERE 
+    order_status = 'DELIVERED' -- Filters out failed, cart-abandoned, or cancelled orders
+GROUP BY 
+    customer_id,
+    customer_name
+ORDER BY 
+    total_orders_placed DESC;
+Use code with caution.2. PySpark ImplementationIn a distributed infrastructure, you can use PySpark's .groupBy() and .agg() operators to perform this calculation efficiently across large clusters.Production-Ready PySpark Scriptpythonfrom pyspark.sql import SparkSession
+from pyspark.sql.functions import col, count
+
+# 1. Initialize Spark Session
+spark = SparkSession.builder \
+    .appName("MetaCustomerOrderFrequency") \
+    .getOrCreate()
+
+# 2. Create Sample Meta Order Ledger Data
+order_data = [
+    ("ORD_001", "CUST_10", "Sarah Connor", "DELIVERED"),
+    ("ORD_002", "CUST_20", "John Doe",     "DELIVERED"),
+    ("ORD_003", "CUST_10", "Sarah Connor", "DELIVERED"),
+    ("ORD_004", "CUST_30", "Ellen Ripley", "CANCELLED"), # Should be excluded from metrics
+    ("ORD_005", "CUST_20", "John Doe",     "DELIVERED"),
+    ("ORD_006", "CUST_20", "John Doe",     "DELIVERED")
+]
+
+schema = ["order_id", "customer_id", "customer_name", "order_status"]
+df_orders = spark.createDataFrame(order_data, schema=schema)
+
+# 3. Filter for successful transactions and calculate order frequencies
+df_order_counts = df_orders.filter(col("order_status") == "DELIVERED") \
+    .groupBy("customer_id", "customer_name") \
+    .agg(count("order_id").alias("total_orders_placed")) \
+    .orderBy(col("total_orders_placed").desc())
+
+# 4. Display user engagement breakdown
+print("Meta Order Metric Rollup: Order Counts Per Customer")
+df_order_counts.show()
+Use code with caution.Execution OutputtextMeta Order Metric Rollup: Order Counts Per Customer
++-----------+-------------+-------------------+
+
+
+|customer_id|customer_name|total_orders_placed|
++-----------+-------------+-------------------+
+
+
+|    CUST_20|     John Doe|                  3|
+|    CUST_10| Sarah Connor|                  2|
++-----------+-------------+-------------------+
+Use code with caution.Engineering Optimization NoteWhen grouping large-volume transactional systems (like millions of daily Meta clicks or purchases), the customer_id grouping triggers a Shuffle Exchange across nodes. To maximize performance, ensure your data is pr
