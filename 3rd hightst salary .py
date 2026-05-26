@@ -29,7 +29,8 @@ FROM
     RankedEmployees
 WHERE 
     salary_rank <= 3;
-Use code with caution.2. PySpark ImplementationUsing the PySpark Window functions provides the highest performance optimization when running across distributed cloud clusters.Production-Ready PySpark Scriptpythonfrom pyspark.sql import SparkSession
+# Use code with caution.
+#2. PySpark ImplementationUsing the PySpark Window functions provides the highest performance optimization when running across distributed cloud clusters.Production-Ready PySpark Scriptpythonfrom pyspark.sql import SparkSession
 from pyspark.sql.window import Window
 from pyspark.sql.functions import col, dense_rank
 
@@ -65,13 +66,11 @@ Use code with caution.Execution OutputtextGoogle Top 3 Highest-Paid Compensation
 +-----------+-------------+-------------+------+
 
 
-|employee_id|employee_name|   department|salary|
+# |employee_id|employee_name|   department|salary|
+#+-----------+-------------+-------------+------+
+#        102|        Blake|Google Search|310000|
+#|        105|         Evan|Google Search|310000|
+#|        103|      Charlie|     DeepMind|280000|
+#|        101|         Alex|  Cloud Infra|250000|
 +-----------+-------------+-------------+------+
-
-
-|        102|        Blake|Google Search|310000|
-|        105|         Evan|Google Search|310000|
-|        103|      Charlie|     DeepMind|280000|
-|        101|         Alex|  Cloud Infra|250000|
-+-----------+-------------+-------------+------+
-Use code with caution.Note: 4 rows are returned here because Blake and Evan have identical top-tier salaries, illustrating why dense_rank() protects data integrity.Cloud Integration TipWhen running this pipeline on Google Cloud Platform (GCP) Dataproc, read directly from Cloud Storage (GCS) buckets into your DataFrame using the gs:// URI scheme instead of local arrays.
+# Use code with caution.Note: 4 rows are returned here because Blake and Evan have identical top-tier salaries, illustrating why dense_rank() protects data integrity.Cloud Integration TipWhen running this pipeline on Google Cloud Platform (GCP) Dataproc, read directly from Cloud Storage (GCS) buckets into your DataFrame using the gs:// URI scheme instead of local arrays.
