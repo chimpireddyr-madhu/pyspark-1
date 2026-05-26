@@ -1,0 +1,35 @@
+# Find Employees Without Department (Uber)
+# Method A: Left Join (Recommended for Scannability)
+# #1. SQL ImplementationIn standard SQL, the most efficient and readable way to find unmatched records is using a LEFT JOIN combined with a WHERE ... IS NULL filter [1, 2], or an explicit NOT EXISTS clause [1].
+SELECT 
+    e.employee_id,
+    e.employee_name,
+    e.role,
+    e.department_id AS employee_dept_id
+FROM 
+    employees e
+LEFT JOIN 
+    departments d 
+    ON e.department_id = d.department_id
+WHERE 
+    d.department_id IS NULL;
+    
+#Method B: NOT EXISTS Clause
+SELECT 
+    e.employee_id,
+    e.employee_name,
+    e.role
+FROM 
+    employees e
+WHERE NOT EXISTS (
+    SELECT 1 
+    FROM departments d 
+    WHERE e.department_id = d.department_id
+);
+
+    
+    
+  
+    
+    
+   
